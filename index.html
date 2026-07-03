@@ -163,6 +163,47 @@ select:focus, input[type="number"]:focus {
 .note.warn { border-left-color: #e74c3c; }
 .note.warn strong { color: #e74c3c; }
 
+/* ─── TOAST ─────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: calc(100% - 32px);
+  max-width: 420px;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #162036;
+  border: 1px solid #c9a84c;
+  border-left: 4px solid #c9a84c;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: toast-in 0.25s ease-out forwards, toast-out 0.3s ease-in forwards 2.7s;
+}
+.toast.error { border-color: #e74c3c; border-left-color: #e74c3c; }
+.toast-icon { font-size: 1.05rem; flex-shrink: 0; }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
 /* ─── BUTTONS ───────────────────────────────── */
 .btn {
   width: 100%;
@@ -643,6 +684,8 @@ select:focus, input[type="number"]:focus {
 
 </div><!-- /container -->
 
+<div class="toast-container" id="toast-container"></div>
+
 <script>
 // ─── DATI TARIFFE ───────────────────────────────────────────────
 const tariffe = {
@@ -705,6 +748,18 @@ const gradiPerCategoria = {
   ufficiali_gen: ["Generale di Brigata","Generale di Divisione","Generale di Corpo d'Armata"],
 };
 
+// ─── TOAST ──────────────────────────────────────────────────────
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  const el = document.createElement("div");
+  el.className = "toast" + (type === "error" ? " error" : "");
+  el.innerHTML = `<span class="toast-icon">${type === "error" ? "⚠️" : "✅"}</span><span>${message}</span>`;
+  container.appendChild(el);
+  el.addEventListener("animationend", (e) => {
+    if (e.animationName === "toast-out") el.remove();
+  });
+}
+
 // ─── ACCORDION ─────────────────────────────────────────────────
 function toggleAcc(id) {
   const el = document.getElementById(id);
@@ -729,7 +784,7 @@ function aggiornaGradi() {
 function calcola() {
   const grado = document.getElementById("grado").value;
   if (!grado || !tariffe[grado]) {
-    alert("Seleziona categoria e grado prima di calcolare.");
+    showToast("Seleziona categoria e grado prima di calcolare.", "error");
     return;
   }
   const t = tariffe[grado];
@@ -804,6 +859,7 @@ function calcola() {
   const res = document.getElementById("results");
   res.classList.add("show");
   setTimeout(() => res.scrollIntoView({ behavior:"smooth", block:"start" }), 50);
+  showToast(`Calcolo completato: € ${totLordo.toFixed(2)} lordi`);
 }
 
 // ─── RESET ──────────────────────────────────────────────────────
@@ -817,6 +873,7 @@ function resetForm() {
   });
   document.getElementById("results").classList.remove("show");
   window.scrollTo({ top:0, behavior:"smooth" });
+  showToast("Modulo azzerato.");
 }
 </script>
 </body>
