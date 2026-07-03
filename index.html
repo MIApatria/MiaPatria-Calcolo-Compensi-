@@ -136,6 +136,11 @@ select:focus, input[type="number"]:focus {
   border-color: #c9a84c;
   box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
 }
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  color: #7a85a8;
+}
 
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -226,6 +231,12 @@ select:focus, input[type="number"]:focus {
   background: linear-gradient(135deg, #1e2a45, #2d3f6b);
   color: #8894b4;
   margin-top: 10px;
+}
+.btn-pdf {
+  background: transparent;
+  color: #c9a84c;
+  border: 1.5px solid #c9a84c;
+  margin-top: 14px;
 }
 
 /* ─── RESULTS ───────────────────────────────── */
@@ -397,6 +408,25 @@ select:focus, input[type="number"]:focus {
   height: 1px;
   background: #2d3f6b;
 }
+
+/* ─── STAMPA PDF ────────────────────────────── */
+.pdf-print-area { display: none; }
+.pdf-print-area table { width: 100%; border-collapse: collapse; }
+.pdf-print-area td { padding: 7px 0; border-bottom: 1px solid #ddd; font-size: 13px; }
+.pdf-print-area td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.pdf-print-area .pdf-total td { border-bottom: none; border-top: 2px solid #111; padding-top: 12px; font-size: 16px; font-weight: 800; }
+
+@media print {
+  .header, .container, .toast-container { display: none !important; }
+  body { background: #fff !important; min-height: 0 !important; }
+  .pdf-print-area {
+    display: block;
+    width: 100%;
+    padding: 24px;
+    background: #fff;
+    color: #111;
+  }
+}
 </style>
 </head>
 <body>
@@ -508,6 +538,7 @@ select:focus, input[type="number"]:focus {
   <div class="results" id="results">
     <div class="result-title">📊 Riepilogo Calcolo</div>
     <div id="result-content"></div>
+    <button class="btn btn-pdf" onclick="scaricaPDF()">📄 Scarica PDF</button>
   </div>
 
   <!-- SEZIONI A TENDINA -->
@@ -685,6 +716,7 @@ select:focus, input[type="number"]:focus {
 </div><!-- /container -->
 
 <div class="toast-container" id="toast-container"></div>
+<div class="pdf-print-area" id="pdf-print-area"></div>
 
 <script>
 // ─── DATI TARIFFE ───────────────────────────────────────────────
@@ -748,6 +780,9 @@ const gradiPerCategoria = {
   ufficiali_gen: ["Generale di Brigata","Generale di Divisione","Generale di Corpo d'Armata"],
 };
 
+// ─── STATO ULTIMO CALCOLO ───────────────────────────────────────
+let ultimoCalcolo = null;
+
 // ─── TOAST ──────────────────────────────────────────────────────
 function showToast(message, type = "success") {
   const container = document.getElementById("toast-container");
@@ -771,12 +806,17 @@ function aggiornaGradi() {
   const cat = document.getElementById("categoria").value;
   const sel = document.getElementById("grado");
   sel.innerHTML = '<option value="">— Seleziona grado —</option>';
+  sel.disabled = false;
   if (cat && gradiPerCategoria[cat]) {
     gradiPerCategoria[cat].forEach(g => {
       const opt = document.createElement("option");
       opt.value = g; opt.textContent = g;
       sel.appendChild(opt);
     });
+  }
+  if (cat === "vfp4_vft") {
+    sel.value = "VFP4";
+    sel.disabled = true;
   }
 }
 
@@ -860,6 +900,51 @@ function calcola() {
   res.classList.add("show");
   setTimeout(() => res.scrollIntoView({ behavior:"smooth", block:"start" }), 50);
   showToast(`Calcolo completato: € ${totLordo.toFixed(2)} lordi`);
+
+  ultimoCalcolo = {
+    grado, oreFer, oreFest, oreFestNott, t,
+    compFer, compFest, compFestNott, totStraord,
+    cfiFer, cfiFest, cfiR, totCFI,
+    cfgGg, totCFG,
+    repFer, repFest, totRep,
+    totLordo, totOre
+  };
+}
+
+// ─── DOWNLOAD PDF ───────────────────────────────────────────────
+function scaricaPDF() {
+  if (!ultimoCalcolo) {
+    showToast("Esegui prima un calcolo.", "error");
+    return;
+  }
+  const c = ultimoCalcolo;
+  const oggi = new Date().toLocaleDateString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric" });
+
+  const area = document.getElementById("pdf-print-area");
+  area.innerHTML = `
+    <div style="text-align:center;margin-bottom:24px;border-bottom:2px solid #c9a84c;padding-bottom:14px;">
+      <div style="font-size:20px;font-weight:800;letter-spacing:1px;color:#111;">M.I.A. PATRIA</div>
+      <div style="font-size:12px;color:#555;letter-spacing:1px;text-transform:uppercase;">Calcolatore Straordinario Militare</div>
+      <div style="font-size:12px;color:#555;margin-top:6px;">Riepilogo calcolo generato il ${oggi}</div>
+    </div>
+    <table>
+      <tr><td>Grado</td><td><strong>${c.grado}</strong></td></tr>
+      <tr><td>Straordinario feriale (${c.oreFer}h &times; &euro;${c.t.f.toFixed(2)})</td><td>&euro; ${c.compFer.toFixed(2)}</td></tr>
+      <tr><td>Straordinario fest./nott. (${c.oreFest}h &times; &euro;${c.t.fn.toFixed(2)})</td><td>&euro; ${c.compFest.toFixed(2)}</td></tr>
+      <tr><td>Straordinario fest. notturno (${c.oreFestNott}h &times; &euro;${c.t.fnn.toFixed(2)})</td><td>&euro; ${c.compFestNott.toFixed(2)}</td></tr>
+      <tr><td>CFI lun-ven (${c.cfiFer}gg &times; &euro;${c.cfiR.feriale.toFixed(2)})</td><td>&euro; ${(c.cfiFer * c.cfiR.feriale).toFixed(2)}</td></tr>
+      <tr><td>CFI sab/fest. (${c.cfiFest}gg &times; &euro;${c.cfiR.festivo.toFixed(2)})</td><td>&euro; ${(c.cfiFest * c.cfiR.festivo).toFixed(2)}</td></tr>
+      <tr><td>CFG (${c.cfgGg}gg)</td><td>&euro; ${c.totCFG.toFixed(2)}</td></tr>
+      <tr><td>Reperibilit&agrave; (${c.repFer}h fer. + ${c.repFest}h fest.)</td><td>&euro; ${c.totRep.toFixed(2)}</td></tr>
+      <tr class="pdf-total"><td>TOTALE LORDO INDICATIVO</td><td>&euro; ${c.totLordo.toFixed(2)}</td></tr>
+    </table>
+    <p style="margin-top:20px;font-size:11px;color:#555;line-height:1.6;">
+      Importo al lordo di ritenute fiscali e previdenziali. I valori sono puramente indicativi e non costituiscono
+      calcolo ufficiale. Basato su Direttiva SME 8002 Ed. 2026 e D.P.R. 24 marzo 2025, n. 52.
+    </p>
+  `;
+
+  window.print();
 }
 
 // ─── RESET ──────────────────────────────────────────────────────
@@ -872,6 +957,7 @@ function resetForm() {
     document.getElementById(id).value = 0;
   });
   document.getElementById("results").classList.remove("show");
+  ultimoCalcolo = null;
   window.scrollTo({ top:0, behavior:"smooth" });
   showToast("Modulo azzerato.");
 }
