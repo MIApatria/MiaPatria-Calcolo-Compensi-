@@ -1,0 +1,50 @@
+name: busta_paga_cirfood
+description: >
+  Analizza, spiega e verifica la busta paga CIRFOOD: importazione da foto o PDF,
+  riconoscimento automatico delle voci, calendario turni e confronto ore/importi.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Stato applicazione
+  provider: ^6.1.2
+
+  # Persistenza locale (nessun cloud)
+  sqflite: ^2.3.3+1
+  path: ^1.9.0
+  path_provider: ^2.1.4
+
+  # Import busta paga: foto e PDF
+  image_picker: ^1.1.2
+  pdfx: ^2.8.0
+  google_mlkit_text_recognition: ^0.13.0
+  google_mlkit_commons: ^0.7.1
+
+  # Formattazione date/numeri in italiano
+  intl: ^0.19.0
+
+  # Grafico andamento netto nel tempo
+  fl_chart: ^0.69.0
+
+  # Esportazione/backup dati
+  share_plus: ^11.0.0
+  file_picker: ^8.1.2
+
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/seed/cedolini_seed.json

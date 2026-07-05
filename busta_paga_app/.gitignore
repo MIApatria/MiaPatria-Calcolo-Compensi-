@@ -1,0 +1,22 @@
+# Generati da Flutter/Dart
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+*.iml
+.idea/
+
+# Piattaforme native: generate al volo dalla CI con "flutter create ."
+# (vedi .github/workflows/build_apk.yml) per evitare di mantenere a mano
+# gli scaffold Gradle/Xcode in questo ambiente senza Android SDK.
+android/
+ios/
+macos/
+linux/
+windows/
+web/
+
+# File locali generati da flutter/IDE
+.metadata
+local.properties
