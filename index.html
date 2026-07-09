@@ -812,6 +812,82 @@ select:disabled {
     </div>
   </div>
 
+  <!-- ACCORDION 5: NOTTURNO / FESTIVO / SUPERFESTIVO -->
+  <div class="accordion" id="acc5">
+    <div class="accordion-header" onclick="toggleAcc('acc5')">
+      <span class="accordion-header-text">🌙 Notturno / Festivo / Super Festivo</span>
+      <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="note" style="margin-top:0;margin-bottom:8px;">
+          <strong>Indennità notturna:</strong> € 18,00 per giornata, per servizi sia armati che non armati, con almeno 4 ore continuative nella fascia 22:00–06:00 (art. 12 D.P.R. 52/2025). Cumulabile con CFG e con l'indennità di presenza festiva/superfestiva.
+        </div>
+        <div class="note" style="margin-bottom:8px;">
+          <strong>Indennità di presenza festiva:</strong> € 14,00 per ogni giornata festiva di effettivo servizio.
+        </div>
+        <div class="note" style="margin-bottom:10px;">
+          <strong>Indennità di presenza superfestiva:</strong> € 40,00 per ogni giornata rientrante nell'elenco chiuso delle "superfestività" (vedi sotto), di effettivo servizio.
+        </div>
+        <p style="font-size:0.72rem;color:#8894b4;margin-bottom:6px;">Giorni considerati festivi</p>
+        <table class="info-table">
+          <tbody>
+            <tr><td>Tutte le domeniche</td></tr>
+            <tr><td>Pasqua e Lunedì dell'Angelo (Pasquetta)</td></tr>
+            <tr><td>01/01 Capodanno, 06/01 Epifania</td></tr>
+            <tr><td>25/04 Anniversario della Liberazione</td></tr>
+            <tr><td>01/05 Festa dei Lavoratori, 02/06 Festa della Repubblica</td></tr>
+            <tr><td>15/08 Ferragosto, 01/11 Ognissanti</td></tr>
+            <tr><td>08/12 Immacolata Concezione, 25–26/12 Natale e S. Stefano</td></tr>
+            <tr><td>Santo Patrono del reparto, <em>solo se cade in giornata feriale</em></td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.72rem;color:#8894b4;margin:10px 0 6px;">Giorni considerati superfestivi (elenco chiuso)</p>
+        <table class="info-table">
+          <tbody>
+            <tr><td>Pasqua e Lunedì dell'Angelo</td></tr>
+            <tr><td>01/01 Capodanno</td></tr>
+            <tr><td>01/05 Festa dei Lavoratori</td></tr>
+            <tr><td>02/06 Festa della Repubblica</td></tr>
+            <tr><td>15/08 Ferragosto</td></tr>
+            <tr><td>25/12 Natale, 26/12 Santo Stefano</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:10px;">
+          <strong>Santo Patrono e sabato:</strong> conta come giorno festivo solo se cade in una giornata feriale. Con articolazione oraria su 6 giorni il sabato è feriale (e quindi il Santo Patrono di sabato vale), con articolazione su 5 giorni il sabato è già non lavorativo di suo.
+        </div>
+        <div class="note" style="margin-top:8px;">
+          <strong>Come si contano su un turno a cavallo di più giorni:</strong> ogni singola giornata di calendario effettivamente coperta dal turno viene valutata per conto proprio (festiva, superfestiva, o feriale), indipendentemente dal giorno in cui il turno è iniziato. Un turno che inizia di sabato feriale e finisce di domenica matura quindi comunque l'indennità festiva della domenica.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCORDION 6: CUMULABILITÀ -->
+  <div class="accordion" id="acc6">
+    <div class="accordion-header" onclick="toggleAcc('acc6')">
+      <span class="accordion-header-text">🔗 Cosa si può cumulare e cosa no</span>
+      <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <p style="font-size:0.72rem;color:#8894b4;margin-bottom:8px;">Criteri generali di orientamento — in caso di dubbio verificare sempre con l'amministrazione del proprio Ente</p>
+        <div class="note" style="margin-top:0;margin-bottom:8px;">
+          <strong>Cumulabili tra loro:</strong> indennità notturna + CFG; indennità notturna + presenza festiva/superfestiva; CFG + presenza festiva/superfestiva (sono conteggiate su basi indipendenti: giorno di inizio blocco per il CFG, singola giornata di calendario per festiva/superfestiva/notturna); reperibilità + indennità di compensazione, quando ricorrono entrambe le condizioni (disponibilità fuori servizio e successivo richiamo effettivo).
+        </div>
+        <div class="note warn" style="margin-bottom:8px;">
+          <strong>Non cumulabili / alternativi:</strong> CFI e CFG non si applicano insieme nello stesso giorno per lo stesso servizio, perché sono due forfait alternativi legati a due tipologie di impiego diverse (servizio ordinario continuativo vs turno di guardia). Le ore di servizio già remunerate a forfait (CFG o CFI) non vanno ricontate anche come ore di straordinario orario (CLS) per lo stesso periodo.
+        </div>
+        <div class="note warn" style="margin-bottom:8px;">
+          <strong>VFI:</strong> non percepisce straordinario, CFG, reperibilità né indennità accessorie (notturna, festiva/superfestiva, turno, compensazione, IPO, missione): solo il CFI (se prestato) e il forfait mensile di € 100, ridotto di 1/30 per ogni giornata di CFI.
+        </div>
+        <div class="note warn">
+          <strong>Ufficiali Generali:</strong> non percepiscono il CFG, indipendentemente dalle altre indennità maturate.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SEZIONE SINDACATO -->
   <div class="union-section">
     <h3>Hai bisogno di maggiori informazioni?</h3>
